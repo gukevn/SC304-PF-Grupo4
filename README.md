@@ -6,7 +6,7 @@ SC304-PF-Grupo4
 ---
 
 ###  Nombre completo         |       Carnet        |      Usuarios    |          Correos Git
-                             |                     |                  |
+                                                                    
 - FREDDY ALFARO ALVAREZ      |   - FI24042010      |    - Falfaro04   |    - freddyprube123@gmail.com        
 - KEVIN GUTIERREZ CHINCHILLA |   - FI24039518      |    - gukevn      |    - gukevn@gmail.com
 - CRISTIAN PEREZ SOTO        |   - FI24040741      |    - cris03xd    |    - cristianperezsoto2323@gmail.com
