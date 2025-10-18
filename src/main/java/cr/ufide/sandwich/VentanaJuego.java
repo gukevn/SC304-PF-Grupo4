@@ -1,5 +1,7 @@
 package cr.ufide.sandwich;
 
+import cr.ufide.sandwich.ui.PanelSitio;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -7,45 +9,45 @@ import java.util.List;
 
 public class VentanaJuego extends JFrame {
 
-    private JPanel panelCaja;
+    private PanelSitio panelCaja;
+    private PanelSitio panelMazo;
+    private PanelSitio panelMano;
+    private PanelSitio panelPozo;
 
     public VentanaJuego() {
         super("The Sandwich Guy — Avance I");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 600);
+        setSize(1000, 650);
         setLocationRelativeTo(null);
 
-        setLayout(new GridLayout(2, 2, 8, 8));
+        // Grid 2x2 para las cuatro secciones
+        JPanel grid = new JPanel(new GridLayout(2, 2, 10, 10));
+        grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        add(crearPanelSitio("Caja", true));
-        add(crearPanelSitio("Mazo", false));
-        add(crearPanelSitio("Mano", false));
-        add(crearPanelSitio("Pozo", false));
+        panelCaja = new PanelSitio("Caja (0 cartas)");
+        panelMazo = new PanelSitio("Mazo (boca abajo, 0)");
+        panelMano = new PanelSitio("Mano (máx 8, 0)");
+        panelPozo = new PanelSitio("Pozo (descartes, 0)");
 
-        cargarCajaConBarajaCompleta();
-    }
+        grid.add(panelCaja);
+        grid.add(panelMazo);
+        grid.add(panelMano);
+        grid.add(panelPozo);
 
-    private JComponent crearPanelSitio(String titulo, boolean esCaja) {
-        JPanel interior = new JPanel(new GridLayout(0, 11, 6, 6));
-        interior.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        JScrollPane sc = new JScrollPane(interior);
-        sc.setBorder(BorderFactory.createTitledBorder(titulo));
-        if (esCaja) panelCaja = interior;
-        return sc;
-    }
+        // Barra superior (placeholder)
+        JToolBar toolbar = new JToolBar();
+        toolbar.setFloatable(false);
+        JButton btnBarajar = new JButton("Barajar (placeholder)");
+        toolbar.add(btnBarajar);
 
-    private void cargarCajaConBarajaCompleta() {
-        if (panelCaja == null) return;
+        setLayout(new BorderLayout());
+        add(toolbar, BorderLayout.NORTH);
+        add(grid, BorderLayout.CENTER);
+
+        // Generar baraja y mostrarla en Caja
         List<Carta> baraja = generarBaraja();
-        panelCaja.removeAll();
-        for (Carta c : baraja) {
-            JButton b = new JButton(c.toString());
-            b.setMargin(new Insets(2, 6, 2, 6));
-            b.setFocusable(false);
-            panelCaja.add(b);
-        }
-        panelCaja.revalidate();
-        panelCaja.repaint();
+        panelCaja.setCartas(baraja);
+        panelCaja.setTitulo("Caja (" + baraja.size() + " cartas)");
     }
 
     private List<Carta> generarBaraja() {
