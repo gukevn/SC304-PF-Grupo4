@@ -11,7 +11,7 @@ public class Caja {
     public Carta removerUltima() { return cartas.removeLast(); }
     public Carta verPrimera() { return cartas.getFirst(); }
     public Carta verUltima() { return cartas.getLast(); }
-    public List<Carta> getCartas() { return new LinkedList<>(cartas); }
+    public List<Carta> getCartas() { return new LinkedList<>(cartas); } // Copia para vista
     public int size() { return cartas.size(); }
     public boolean isEmpty() { return cartas.isEmpty(); }
 }

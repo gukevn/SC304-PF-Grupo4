@@ -28,15 +28,17 @@ public final class Carta {
         }
     }
 
+    // Getters
     public int getValor() { return valor; }
     public String getPalo() { return palo; }
     public String getColor() { return color; }
     public String getNombre() { return nombre; }
     public String getSimbolo() { return simbolo; }
 
+    // Método para calcular diferencia (útil para sándwiches, considerando vuelta)
     public int getDiferencia(Carta otra) {
         int diff = Math.abs(this.valor - otra.valor);
-        if (diff > 6) diff = 13 - diff;
+        if (diff > 6) diff = 13 - diff; // Vuelta K-A
         return diff;
     }
 
