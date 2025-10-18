@@ -50,7 +50,6 @@ public class VentanaJuego extends JFrame {
         panelPozo.setCartas(pozo.getCartas());
     }
 
-    // Getters para acceder a las estructuras (útil para futuras integraciones, ej. botones)
     public Caja getCaja() { return caja; }
     public Mazo getMazo() { return mazo; }
     public Mano getMano() { return mano; }

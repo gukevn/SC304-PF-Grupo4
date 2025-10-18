@@ -22,7 +22,7 @@ public class PanelSitio extends JPanel {
     public void setCartas(List<Carta> cartas) {
         grid.removeAll();
         for (Carta c : cartas) {
-            grid.add(new JLabel(c.toString())); // Muestra el símbolo (ej. "A♥")
+            grid.add(new JLabel(c.toString()));
         }
         grid.revalidate();
         grid.repaint();

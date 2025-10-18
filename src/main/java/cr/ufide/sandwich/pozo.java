@@ -10,7 +10,7 @@ public class Pozo {
     public void agregarCarta(Carta carta) { cartas.add(carta); }
     public Carta removerCarta() { return cartas.poll(); }
     public Carta verFrente() { return cartas.peek(); }
-    public List<Carta> getCartas() { return new LinkedList<>(cartas); } // Copia para vista
+    public List<Carta> getCartas() { return new LinkedList<>(cartas); }
     public int size() { return cartas.size(); }
     public boolean isEmpty() { return cartas.isEmpty(); }
 }
