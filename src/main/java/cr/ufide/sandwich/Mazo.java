@@ -10,32 +10,49 @@ public class Mazo {
 
     private final Stack<Carta> cartas = new Stack<>();
 
-    public Mazo() {}
+    public Mazo() {
+    }
 
     public Mazo(List<Carta> inicial) {
-        if (inicial != null) {
-            cartas.addAll(inicial);
+        cargarDesdeLista(inicial);
+    }
+
+    public void cargarDesdeLista(List<Carta> lista) {
+        cartas.clear();
+        if (lista == null) {
+            return;
+        }
+        for (Carta c : lista) {
+            if (c != null) {
+                cartas.push(c);
+            }
         }
     }
 
-    /** Baraja usando Random provisto (útil para pruebas). */
-    public void barajar(Random rnd) {
-        Collections.shuffle(cartas, rnd);
+    public void cargarDesdeListaAleatoria(List<Carta> lista) {
+        cartas.clear();
+        if (lista == null || lista.isEmpty()) {
+            return;
+        }
+        List<Carta> copia = new ArrayList<>(lista);
+        Collections.shuffle(copia, new Random());
+        for (Carta c : copia) {
+            cartas.push(c);
+        }
     }
 
-    /** Baraja con Random por defecto. */
-    public void barajar() {
-        Collections.shuffle(cartas);
+    public void push(Carta carta) {
+        if (carta != null) {
+            cartas.push(carta);
+        }
     }
 
-    /** Pone una carta encima del mazo. */
-    public void poner(Carta c) {
-        if (c != null) cartas.push(c);
-    }
-
-    /** Toma la carta superior; devuelve null si está vacío. */
-    public Carta tomar() {
+    public Carta robar() {
         return cartas.isEmpty() ? null : cartas.pop();
+    }
+
+    public Carta verTope() {
+        return cartas.isEmpty() ? null : cartas.peek();
     }
 
     public boolean estaVacio() {
@@ -46,7 +63,6 @@ public class Mazo {
         return cartas.size();
     }
 
-    /** Copia para lectura/GUI (no expone la pila real). */
     public List<Carta> getCartas() {
         return new ArrayList<>(cartas);
     }

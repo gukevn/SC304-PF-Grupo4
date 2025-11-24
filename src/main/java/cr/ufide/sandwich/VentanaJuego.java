@@ -1,13 +1,17 @@
 package cr.ufide.sandwich;
 
 import cr.ufide.sandwich.ui.PanelSitio;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
 
 public class VentanaJuego extends JFrame {
+
+    private final Caja caja = new Caja();
+    private final Mazo mazo = new Mazo();
+    private final Mano mano = new Mano();
+    private final Pozo pozo = new Pozo();
 
     private PanelSitio panelCaja;
     private PanelSitio panelMazo;
@@ -15,39 +19,68 @@ public class VentanaJuego extends JFrame {
     private PanelSitio panelPozo;
 
     public VentanaJuego() {
-        super("The Sandwich Guy — Avance I");
+        setTitle("Juego de cartas PF Avance II");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 650);
+        setSize(900, 600);
         setLocationRelativeTo(null);
+        inicializarComponentes();
+        inicializarDatos();
+    }
 
-        // Grid 2x2 para las cuatro secciones
-        JPanel grid = new JPanel(new GridLayout(2, 2, 10, 10));
-        grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    private void inicializarComponentes() {
+        panelCaja = new PanelSitio("Caja");
+        panelMazo = new PanelSitio("Mazo");
+        panelMano = new PanelSitio("Mano");
+        panelPozo = new PanelSitio("Pozo");
 
-        panelCaja = new PanelSitio("Caja (0 cartas)");
-        panelMazo = new PanelSitio("Mazo (boca abajo, 0)");
-        panelMano = new PanelSitio("Mano (máx 8, 0)");
-        panelPozo = new PanelSitio("Pozo (descartes, 0)");
+        JButton btnBarajar = new JButton("Barajar: Caja a Mazo");
 
-        grid.add(panelCaja);
-        grid.add(panelMazo);
-        grid.add(panelMano);
-        grid.add(panelPozo);
+        btnBarajar.addActionListener(e -> barajarCajaEnMazo());
 
-        // Barra superior (placeholder)
-        JToolBar toolbar = new JToolBar();
-        toolbar.setFloatable(false);
-        JButton btnBarajar = new JButton("Barajar (placeholder)");
-        toolbar.add(btnBarajar);
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBotones.add(btnBarajar);
 
-        setLayout(new BorderLayout());
-        add(toolbar, BorderLayout.NORTH);
-        add(grid, BorderLayout.CENTER);
+        JPanel panelCentros = new JPanel(new GridLayout(2, 2, 8, 8));
+        panelCentros.add(panelCaja);
+        panelCentros.add(panelMazo);
+        panelCentros.add(panelMano);
+        panelCentros.add(panelPozo);
 
-        // Generar baraja y mostrarla en Caja
+        getContentPane().setLayout(new BorderLayout(8, 8));
+        getContentPane().add(panelBotones, BorderLayout.NORTH);
+        getContentPane().add(panelCentros, BorderLayout.CENTER);
+    }
+
+    private void inicializarDatos() {
         List<Carta> baraja = generarBaraja();
-        panelCaja.setCartas(baraja);
-        panelCaja.setTitulo("Caja (" + baraja.size() + " cartas)");
+        for (Carta c : baraja) {
+            caja.agregarCarta(c);
+        }
+        refrescarVistas();
+    }
+
+    private void barajarCajaEnMazo() {
+        List<Carta> cartasCaja = caja.getCartas();
+        if (cartasCaja.isEmpty()) {
+            return;
+        }
+        mazo.cargarDesdeListaAleatoria(cartasCaja);
+        caja.vaciar();
+        refrescarVistas();
+    }
+
+    private void refrescarVistas() {
+        panelCaja.setCartas(caja.getCartas());
+        panelCaja.setTitulo("Caja (" + caja.size() + " cartas)");
+
+        panelMazo.setCartas(mazo.getCartas());
+        panelMazo.setTitulo("Mazo (" + mazo.size() + " cartas)");
+
+        panelMano.setCartas(mano.getCartas());
+        panelMano.setTitulo("Mano (" + mano.size() + " cartas)");
+
+        panelPozo.setCartas(pozo.getCartas());
+        panelPozo.setTitulo("Pozo (" + pozo.size() + " cartas)");
     }
 
     private List<Carta> generarBaraja() {
