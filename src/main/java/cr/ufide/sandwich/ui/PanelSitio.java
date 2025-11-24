@@ -1,65 +1,44 @@
 package cr.ufide.sandwich.ui;
 
+
 import cr.ufide.sandwich.Carta;
+
+
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
 
+
+/** Panel reutilizable para mostrar cartas y un título con el conteo. */
 public class PanelSitio extends JPanel {
+private final JLabel titulo = new JLabel("", SwingConstants.LEFT);
+private final DefaultListModel<String> modelo = new DefaultListModel<>();
+private final JList<String> lista = new JList<>(modelo);
 
-    private final JPanel cardContainer;
 
-    public PanelSitio(String titulo) {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder(
-                null, titulo, TitledBorder.LEFT, TitledBorder.TOP));
+public PanelSitio(String t) {
+setLayout(new BorderLayout(6,6));
+titulo.setText(t);
+titulo.setFont(titulo.getFont().deriveFont(Font.BOLD));
+add(titulo, BorderLayout.NORTH);
 
-        // Panel interno que contiene las “cartas” como labels
-        cardContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
-        cardContainer.setBackground(new Color(0xEEEEEE));
 
-        // Scroll horizontal/vertical por si se llena
-        JScrollPane scroll = new JScrollPane(cardContainer,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        add(scroll, BorderLayout.CENTER);
-    }
+lista.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
+add(new JScrollPane(lista), BorderLayout.CENTER);
+setBorder(BorderFactory.createEmptyBorder(6,6,6,6));
+}
 
-    public void setTitulo(String titulo) {
-        setBorder(BorderFactory.createTitledBorder(
-                null, titulo, TitledBorder.LEFT, TitledBorder.TOP));
-        revalidate();
-        repaint();
-    }
 
-    public void setCartas(List<Carta> cartas) {
-        cardContainer.removeAll();
-        if (cartas != null) {
-            for (Carta carta : cartas) {
-                cardContainer.add(crearLabelCarta(carta));
-            }
-        }
-        cardContainer.revalidate();
-        cardContainer.repaint();
-    }
+public void setTitulo(String t){ titulo.setText(t); }
 
-    private JComponent crearLabelCarta(Carta carta) {
-        JLabel cardLabel = new JLabel(carta.toString());
-        cardLabel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        cardLabel.setOpaque(true);
-        cardLabel.setBackground(Color.WHITE);
-        cardLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        cardLabel.setPreferredSize(new Dimension(50, 70));
-        cardLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        cardLabel.setToolTipText(carta.getNombre() + " de " + carta.getPalo().name().toLowerCase());
 
-        // Color de texto por palo
-        if ("rojo".equals(carta.getColor())) {
-            cardLabel.setForeground(Color.RED);
-        } else {
-            cardLabel.setForeground(Color.BLACK);
-        }
-        return cardLabel;
-    }
+public void setCartas(List<Carta> cartas){
+modelo.clear();
+if (cartas == null) return;
+for (Carta c : cartas) {
+String item = String.format("%-6s palo=%-8s color=%s",
+c.toString(), c.getPalo().name(), c.getColor());
+modelo.addElement(item);
+}
+}
 }

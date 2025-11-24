@@ -1,53 +1,36 @@
 package cr.ufide.sandwich;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 
+
+/** Pila (stack) de cartas. */
 public class Mazo {
+private final Stack<Carta> cartas = new Stack<>();
 
-    private final Stack<Carta> cartas = new Stack<>();
 
-    public Mazo() {}
+public boolean estaVacio() { return cartas.isEmpty(); }
+public int size() { return cartas.size(); }
 
-    public Mazo(List<Carta> inicial) {
-        if (inicial != null) {
-            cartas.addAll(inicial);
-        }
-    }
 
-    /** Baraja usando Random provisto (útil para pruebas). */
-    public void barajar(Random rnd) {
-        Collections.shuffle(cartas, rnd);
-    }
+public void push(Carta c) { cartas.push(c); }
+public Carta pop() { return cartas.pop(); }
+public Carta peek() { return cartas.peek(); }
 
-    /** Baraja con Random por defecto. */
-    public void barajar() {
-        Collections.shuffle(cartas);
-    }
+/**
+* Carga el mazo con todas las cartas provenientes de una lista,
+* previamente barajadas aleatoriamente.
+*/
+public void cargarBarajado(List<Carta> origen) {
+cartas.clear();
+List<Carta> copia = new ArrayList<>(origen);
+Collections.shuffle(copia);
+for (Carta c : copia) cartas.push(c);
+}
 
-    /** Pone una carta encima del mazo. */
-    public void poner(Carta c) {
-        if (c != null) cartas.push(c);
-    }
-
-    /** Toma la carta superior; devuelve null si está vacío. */
-    public Carta tomar() {
-        return cartas.isEmpty() ? null : cartas.pop();
-    }
-
-    public boolean estaVacio() {
-        return cartas.isEmpty();
-    }
-
-    public int size() {
-        return cartas.size();
-    }
-
-    /** Copia para lectura/GUI (no expone la pila real). */
-    public List<Carta> getCartas() {
-        return new ArrayList<>(cartas);
-    }
+/** Copia segura para la GUI. */
+public List<Carta> getCartas() { return new ArrayList<>(cartas); }
 }
