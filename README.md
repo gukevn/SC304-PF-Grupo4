@@ -8,8 +8,7 @@ SC304-PF-Grupo4
 ## Integrantes
 - Kevin Gutiérrez Chinchilla — Carné: FI24039518 — GitHub: @gukevn — Email Git: gukev@gmail. 
 - FREDDY ALFARO ALVAREZ — Carné: FI24042010 — GitHub: @Falfaro04 — Email Git: freddyprube123@gmail.com
-- CRISTIAN PEREZ SOTO — Carné: FI24040741 — GitHub: @cris03xd — Email Git: cristianperezsoto2323@gmail.com
-- CRISTEL VASQUEZ CAMPOS — Carné: FI24038179  — GitHub: @Cris2328 — Email Git: cristelvasquez828@gmail.com
+
 
 
 ---
@@ -42,3 +41,36 @@ El propósito es aplicar los principios de programación orientada a objetos, ma
 ### Ejecución
 1. Una vez ejecutado usando "Run" o por medio de la terminal, el programa abrirá una interfaz, donde el usuario podrá interactuar con los menús.
 2. Para ejecutar ingrese el siguiente comando: java -cp out cr.ufide.sandwich.Main
+
+
+
+
+
+---
+# Avance II
+
+## Componentes solicitados
+
+- **Caja**: estructura tipo lista; contiene inicialmente las 52 cartas.  
+- **Mazo**: estructura tipo pila; recibe las cartas mezcladas.  
+- **Mano**: estructura tipo lista; vacía en este avance.  
+- **Pozo**: estructura tipo cola; vacío en este avance.
+
+---
+
+## Funcionalidad de "Barajar"
+
+Se pasa **toda la Caja al Mazo** de forma **aleatoria**, cumpliendo el requisito del avance.
+
+---
+
+## Interfaz gráfica
+
+La interfaz muestra:
+
+- Panel de Caja con cantidad de cartas  
+- Panel de Mazo  
+- Panel de Mano  
+- Panel de Pozo  
+- Botón **"Barajar: Caja a Mazo"**  
+- Cartas representadas visualmente con color, palo y valor
