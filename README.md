@@ -9,8 +9,7 @@ SC304-PF-Grupo4
                                                                     
 - FREDDY ALFARO ALVAREZ      |   - FI24042010           
 - KEVIN GUTIERREZ CHINCHILLA |   - FI24039518    
-- CRISTIAN PEREZ SOTO        |   - FI24040741      
-- CRISTEL VASQUEZ CAMPOS     |   - FI24038179     
+    
  
 ---
 
@@ -18,8 +17,7 @@ SC304-PF-Grupo4
 
 - Falfaro04    |   - freddyprube123@gmail.com
 - gukevn       |   - gukevn@gmail.com
-- cris03xd     |   - cristianperezsoto2323@gmail.com
-- Cris2328     |   - cristelvasquez828@gmail.com
+
 
 ---
 
