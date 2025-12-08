@@ -219,3 +219,13 @@ prompts_IA:
 
 
 # Imagenes
+<img width="707" height="599" alt="image" src="https://github.com/user-attachments/assets/d6dc2551-690f-4272-b1da-a587253ea7b8" />
+<img width="698" height="598" alt="image" src="https://github.com/user-attachments/assets/58c3965a-29ca-45aa-ab69-5d8036f6b029" />
+<img width="697" height="600" alt="image" src="https://github.com/user-attachments/assets/0d0ca127-b61d-4ef0-8682-0e0240ac0293" />
+<img width="896" height="611" alt="image" src="https://github.com/user-attachments/assets/ea974cea-792a-4b46-9a22-e8682af682f6" />
+<img width="893" height="596" alt="image" src="https://github.com/user-attachments/assets/9e63a51b-ed2d-45df-b1e7-1a3bf5fb6dcb" />
+<img width="911" height="605" alt="image" src="https://github.com/user-attachments/assets/cbbe87c8-84c5-4ad7-af16-0b1c24e24f2b" />
+
+
+
+
