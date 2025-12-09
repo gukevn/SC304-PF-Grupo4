@@ -225,7 +225,7 @@ prompts_IA:
 <img width="896" height="611" alt="image" src="https://github.com/user-attachments/assets/ea974cea-792a-4b46-9a22-e8682af682f6" />
 <img width="893" height="596" alt="image" src="https://github.com/user-attachments/assets/9e63a51b-ed2d-45df-b1e7-1a3bf5fb6dcb" />
 <img width="911" height="605" alt="image" src="https://github.com/user-attachments/assets/cbbe87c8-84c5-4ad7-af16-0b1c24e24f2b" />
-
+<img width="729" height="700" alt="image" src="https://github.com/user-attachments/assets/15ff408f-17b1-4563-a008-f46234f58973" />
 
 
 
