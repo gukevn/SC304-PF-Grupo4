@@ -29,7 +29,7 @@ public class VentanaJuego extends JFrame {
     public VentanaJuego() {
         setTitle("Juego de cartas PF Avance II");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 600);
+        setSize(1000, 700);
         setLocationRelativeTo(null);
         inicializarComponentes();
         inicializarDatos();
@@ -41,52 +41,61 @@ public class VentanaJuego extends JFrame {
         panelMano = new PanelSitio("Mano");
         panelPozo = new PanelSitio("Pozo");
 
-        // Activar selección manual en la mano
         panelMano.setSeleccionable(true);
-        panelMano.setCartaClickListener((index, carta) -> actualizarSeleccionDesdePanel());
+        panelMano.setCartaClickListener((i, c) -> actualizarSeleccionDesdePanel());
 
         JButton btnBarajar = new JButton("Barajar: Caja a Mazo");
         JButton btnOrdenar = new JButton("Ordenar mano");
         JButton btnTurnoAuto = new JButton("Probar sándwich (auto)");
         JButton btnGuardar = new JButton("Guardar partida");
         JButton btnCargar = new JButton("Cargar partida");
+        JButton btnReiniciar = new JButton("Reiniciar juego");
 
         btnBarajar.addActionListener(e -> barajarCajaEnMazo());
         btnOrdenar.addActionListener(e -> ordenarMano());
         btnTurnoAuto.addActionListener(e -> jugarTurnoAutomatico());
         btnGuardar.addActionListener(e -> guardarPartidaXML());
         btnCargar.addActionListener(e -> cargarPartidaXML());
+        btnReiniciar.addActionListener(e -> reiniciarJuego());
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelBotones.add(btnBarajar);
-        panelBotones.add(btnOrdenar);
-        panelBotones.add(btnTurnoAuto);
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCargar);
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        botones.add(btnBarajar);
+        botones.add(btnOrdenar);
+        botones.add(btnTurnoAuto);
+        botones.add(btnGuardar);
+        botones.add(btnCargar);
+        botones.add(btnReiniciar);
 
-        JPanel panelCentros = new JPanel(new GridLayout(2, 2, 8, 8));
-        panelCentros.add(panelCaja);
-        panelCentros.add(panelMazo);
-        panelCentros.add(panelMano);
-        panelCentros.add(panelPozo);
+        JPanel centros = new JPanel(new GridLayout(2, 2, 8, 8));
+        centros.add(panelCaja);
+        centros.add(panelMazo);
+        centros.add(panelMano);
+        centros.add(panelPozo);
 
         getContentPane().setLayout(new BorderLayout(8, 8));
-        getContentPane().add(panelBotones, BorderLayout.NORTH);
-        getContentPane().add(panelCentros, BorderLayout.CENTER);
+        getContentPane().add(botones, BorderLayout.NORTH);
+        getContentPane().add(centros, BorderLayout.CENTER);
     }
 
     private void inicializarDatos() {
-        List<Carta> baraja = generarBaraja();
-        for (Carta c : baraja) {
-            caja.agregarCarta(c);
-        }
+        caja.vaciar();
+        mazo.vaciar();
+        mano.vaciar();
+        pozo.vaciar();
+
+        for (Carta c : generarBaraja()) caja.agregarCarta(c);
+
         refrescarVistas();
     }
 
+    private void reiniciarJuego() {
+        inicializarDatos();
+        JOptionPane.showMessageDialog(this, "El juego ha sido reiniciado.");
+    }
+
     private void barajarCajaEnMazo() {
-        List<Carta> cartasCaja = caja.getCartas();
-        if (!cartasCaja.isEmpty()) {
-            mazo.cargarDesdeListaAleatoria(cartasCaja);
+        if (!caja.getCartas().isEmpty()) {
+            mazo.cargarDesdeListaAleatoria(caja.getCartas());
             caja.vaciar();
             repartirManoInicial();
         }
@@ -95,51 +104,41 @@ public class VentanaJuego extends JFrame {
 
     private void repartirManoInicial() {
         while (mano.size() < 8 && !mazo.estaVacio()) {
-            Carta c = mazo.robar();
-            if (c == null) break;
-            mano.agregarCarta(c);
+            mano.agregarCarta(mazo.robar());
         }
     }
 
     private void refrescarVistas() {
         panelCaja.setCartas(caja.getCartas());
-        panelCaja.setTitulo("Caja (" + caja.size() + " cartas)");
+        panelCaja.setTitulo("Caja (" + caja.size() + ")");
 
         panelMazo.setCartas(mazo.getCartas());
-        panelMazo.setTitulo("Mazo (" + mazo.size() + " cartas)");
+        panelMazo.setTitulo("Mazo (" + mazo.size() + ")");
 
         panelMano.setCartas(mano.getCartas());
-        panelMano.setTitulo("Mano (" + mano.size() + " cartas)");
+        panelMano.setTitulo("Mano (" + mano.size() + ")");
 
         panelPozo.setCartas(pozo.getCartas());
-        panelPozo.setTitulo("Pozo (" + pozo.size() + " cartas)");
+        panelPozo.setTitulo("Pozo (" + pozo.size() + ")");
     }
 
     private List<Carta> generarBaraja() {
-        List<Carta> cartas = new ArrayList<>(52);
+        List<Carta> cartas = new ArrayList<>();
         for (Carta.Palo p : Carta.Palo.values()) {
-            for (int v = 1; v <= 13; v++) {
-                cartas.add(new Carta(p, v));
-            }
+            for (int v = 1; v <= 13; v++) cartas.add(new Carta(p, v));
         }
         return cartas;
     }
 
-    // Selección manual
-
     private void actualizarSeleccionDesdePanel() {
         seleccionActual.clear();
-        List<Integer> indices = panelMano.getIndicesSeleccionados();
-        List<Carta> cartasMano = mano.getCartas();
-
-        for (Integer i : indices) {
-            if (i >= 0 && i < cartasMano.size()) {
-                seleccionActual.add(cartasMano.get(i));
+        List<Carta> manoActual = mano.getCartas();
+        for (int idx : panelMano.getIndicesSeleccionados()) {
+            if (idx >= 0 && idx < manoActual.size()) {
+                seleccionActual.add(manoActual.get(idx));
             }
         }
     }
-
-    // Lógica de sándwich
 
     private int distanciaCircular(int a, int b) {
         int directa = Math.abs(a - b);
@@ -147,26 +146,16 @@ public class VentanaJuego extends JFrame {
         return Math.min(directa, circular);
     }
 
-    private TipoSandwich evaluarSandwich(Carta c1, Carta c2, Carta c3) {
-        int v1 = c1.getValor();
-        int v2 = c2.getValor();
-        int v3 = c3.getValor();
+    private TipoSandwich evaluarSandwich(Carta a, Carta b, Carta c) {
+        int d1 = distanciaCircular(a.getValor(), b.getValor());
+        int d2 = distanciaCircular(b.getValor(), c.getValor());
+        if (d1 != d2) return TipoSandwich.INVALIDO;
 
-        int d12 = distanciaCircular(v1, v2);
-        int d23 = distanciaCircular(v2, v3);
+        boolean palo = a.getPalo() == b.getPalo() && b.getPalo() == c.getPalo();
+        boolean color = a.getColorEnum() == b.getColorEnum() && b.getColorEnum() == c.getColorEnum();
 
-        if (d12 != d23) return TipoSandwich.INVALIDO;
-
-        boolean mismoPalo =
-                c1.getPalo() == c2.getPalo() &&
-                c2.getPalo() == c3.getPalo();
-
-        boolean mismoColor =
-                c1.getColorEnum() == c2.getColorEnum() &&
-                c2.getColorEnum() == c3.getColorEnum();
-
-        if (mismoPalo) return TipoSandwich.MISMO_PALO;
-        if (mismoColor) return TipoSandwich.MISMO_COLOR;
+        if (palo) return TipoSandwich.MISMO_PALO;
+        if (color) return TipoSandwich.MISMO_COLOR;
         return TipoSandwich.DISTINTO_COLOR;
     }
 
@@ -181,26 +170,19 @@ public class VentanaJuego extends JFrame {
         );
     }
 
-    // Aplicar sándwich
-
     private void aplicarSandwich(TipoSandwich tipo, List<Carta> tripleta) {
-        List<Carta> cartasMano = mano.getCartas();
-        List<Carta> cartasPozo = pozo.getCartas();
-        List<Carta> cartasMazo = mazo.getCartas();
-
         for (Carta c : tripleta) {
-            cartasMano.remove(c);
-            cartasPozo.add(c);
+            mano.eliminarCarta(c);
+            pozo.agregarCarta(c);
         }
 
-        int cartasATomar =
+        int n =
                 tipo == TipoSandwich.MISMO_PALO ? 4 :
                 tipo == TipoSandwich.MISMO_COLOR ? 3 :
                 tipo == TipoSandwich.DISTINTO_COLOR ? 2 : 0;
 
-        while (cartasATomar > 0 && cartasMano.size() < 8 && !cartasMazo.isEmpty()) {
-            cartasMano.add(cartasMazo.remove(cartasMazo.size() - 1));
-            cartasATomar--;
+        while (n-- > 0 && mano.size() < 8 && !mazo.estaVacio()) {
+            mano.agregarCarta(mazo.robar());
         }
 
         refrescarVistas();
@@ -208,56 +190,48 @@ public class VentanaJuego extends JFrame {
     }
 
     private void verificarVictoriaDerrota() {
-        if (mazo.getCartas().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ganaste: el mazo quedó vacío.");
+        if (mazo.estaVacio()) {
+            JOptionPane.showMessageDialog(this, "Ganaste: no quedan cartas.");
             return;
         }
         if (!existeSandwichEnMano()) {
-            JOptionPane.showMessageDialog(this, "No hay ningún sándwich posible en la mano. Perdiste.");
+            JOptionPane.showMessageDialog(this, "Perdiste: no quedan sándwiches posibles.");
         }
     }
 
     private boolean existeSandwichEnMano() {
-        List<Carta> cartas = mano.getCartas();
-        int n = cartas.size();
-
+        List<Carta> c = mano.getCartas();
+        int n = c.size();
         for (int i = 0; i < n; i++)
             for (int j = i + 1; j < n; j++)
                 for (int k = j + 1; k < n; k++)
-                    for (List<Carta> trip : permutaciones(cartas.get(i), cartas.get(j), cartas.get(k)))
-                        if (evaluarSandwich(trip.get(0), trip.get(1), trip.get(2)) != TipoSandwich.INVALIDO)
+                    for (List<Carta> t : permutaciones(c.get(i), c.get(j), c.get(k)))
+                        if (evaluarSandwich(t.get(0), t.get(1), t.get(2)) != TipoSandwich.INVALIDO)
                             return true;
-
         return false;
     }
 
-    // Turno automático
-
     private void jugarTurnoAutomatico() {
-        List<Carta> cartasMano = mano.getCartas();
+        List<Carta> manoActual = mano.getCartas();
 
         if (seleccionActual.size() == 3) {
-            Carta c1 = seleccionActual.get(0);
-            Carta c2 = seleccionActual.get(1);
-            Carta c3 = seleccionActual.get(2);
-
-            procesarPermutaciones(c1, c2, c3);
+            procesarPermutaciones(seleccionActual.get(0),
+                    seleccionActual.get(1),
+                    seleccionActual.get(2));
             return;
         }
 
-        if (cartasMano.size() < 3) {
-            JOptionPane.showMessageDialog(this, "No hay suficientes cartas en la mano.");
+        if (manoActual.size() < 3) {
+            JOptionPane.showMessageDialog(this, "No hay suficientes cartas.");
             return;
         }
 
-        procesarPermutaciones(cartasMano.get(0), cartasMano.get(1), cartasMano.get(2));
+        procesarPermutaciones(manoActual.get(0), manoActual.get(1), manoActual.get(2));
     }
 
     private void procesarPermutaciones(Carta c1, Carta c2, Carta c3) {
         List<List<Carta>> perms = permutaciones(c1, c2, c3);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Permutaciones evaluadas:\n\n");
+        StringBuilder sb = new StringBuilder("Permutaciones:\n\n");
 
         TipoSandwich mejor = TipoSandwich.INVALIDO;
         List<Carta> mejorTripleta = null;
@@ -266,18 +240,15 @@ public class VentanaJuego extends JFrame {
             List<Carta> t = perms.get(i);
             TipoSandwich tipo = evaluarSandwich(t.get(0), t.get(1), t.get(2));
 
-            int cartasNuevas =
+            int sum =
                     tipo == TipoSandwich.MISMO_PALO ? 4 :
                     tipo == TipoSandwich.MISMO_COLOR ? 3 :
                     tipo == TipoSandwich.DISTINTO_COLOR ? 2 : 0;
 
-            sb.append((i + 1))
-              .append(". ")
-              .append(t.get(0)).append("  ")
-              .append(t.get(1)).append("  ")
-              .append(t.get(2))
-              .append("  -> ").append(tipo)
-              .append("  (").append(cartasNuevas).append(" nuevas)\n");
+            sb.append((i + 1)).append(". ").append(t.get(0)).append(" ")
+                    .append(t.get(1)).append(" ").append(t.get(2))
+                    .append(" -> ").append(tipo)
+                    .append(" (").append(sum).append(" nuevas)\n");
 
             if (esMejor(tipo, mejor)) {
                 mejor = tipo;
@@ -288,14 +259,14 @@ public class VentanaJuego extends JFrame {
         JOptionPane.showMessageDialog(this, sb.toString());
 
         if (mejor == TipoSandwich.INVALIDO) {
-            JOptionPane.showMessageDialog(this, "Ninguna permutación válida.");
+            JOptionPane.showMessageDialog(this, "No hay sándwich válido.");
             return;
         }
 
         int resp = JOptionPane.showConfirmDialog(
                 this,
-                "Mejor combinación: " + mejor + ". ¿Aplicar?",
-                "Aplicar sándwich",
+                "Mejor: " + mejor + ". ¿Aplicar?",
+                "Confirmar",
                 JOptionPane.YES_NO_OPTION
         );
 
@@ -307,23 +278,18 @@ public class VentanaJuego extends JFrame {
     }
 
     private boolean esMejor(TipoSandwich nuevo, TipoSandwich actual) {
-        if (nuevo == TipoSandwich.INVALIDO) return false;
-        if (actual == TipoSandwich.INVALIDO) return true;
-
-        int scoreNuevo =
+        int nv =
                 nuevo == TipoSandwich.MISMO_PALO ? 4 :
                 nuevo == TipoSandwich.MISMO_COLOR ? 3 :
                 nuevo == TipoSandwich.DISTINTO_COLOR ? 2 : 0;
 
-        int scoreActual =
+        int ac =
                 actual == TipoSandwich.MISMO_PALO ? 4 :
                 actual == TipoSandwich.MISMO_COLOR ? 3 :
                 actual == TipoSandwich.DISTINTO_COLOR ? 2 : 0;
 
-        return scoreNuevo > scoreActual;
+        return nv > ac;
     }
-
-    // Auxiliares
 
     private void ordenarMano() {
         mano.ordenarPorPaloYValor();
@@ -331,20 +297,21 @@ public class VentanaJuego extends JFrame {
     }
 
     private void guardarPartidaXML() {
-        JOptionPane.showMessageDialog(
-            this,
-            "Función Guardar partida (XML) aún no implementada.\nGuardar XML",
-            "Guardar partida",
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        try {
+            GestorXML.guardar("partida.xml", caja, mazo, mano, pozo);
+            JOptionPane.showMessageDialog(this, "Partida guardada.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
+        }
     }
 
     private void cargarPartidaXML() {
-        JOptionPane.showMessageDialog(
-            this,
-            "Función Cargar partida (XML) aún no implementada.\nCargar XML",
-            "Cargar partida",
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        try {
+            GestorXML.cargar("partida.xml", caja, mazo, mano, pozo);
+            refrescarVistas();
+            JOptionPane.showMessageDialog(this, "Partida cargada.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar: " + e.getMessage());
+        }
     }
 }

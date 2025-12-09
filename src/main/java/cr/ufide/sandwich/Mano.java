@@ -1,22 +1,21 @@
 package cr.ufide.sandwich;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 
 public class Mano {
 
-    // Lista interna real de la mano
-    private final List<Carta> cartas = new ArrayList<>(8);
+    private final List<Carta> cartas = new ArrayList<>();
 
-    // Agregar carta respetando máximo de 8
-    public void agregarCarta(Carta carta) {
-        if (carta != null && cartas.size() < 8) {
-            cartas.add(carta);
-        }
+    public void agregarCarta(Carta c) {
+        cartas.add(c);
     }
 
-    // Devuelve la lista real que usa la GUI
+    public void eliminarCarta(Carta c) {
+        cartas.remove(c);
+    }
+
     public List<Carta> getCartas() {
         return cartas;
     }
@@ -25,35 +24,27 @@ public class Mano {
         return cartas.size();
     }
 
-    public boolean isEmpty() {
-        return cartas.isEmpty();
+    public void vaciar() {
+        cartas.clear();
     }
 
-    // Ordenar por palo y luego por valor
     public void ordenarPorPaloYValor() {
-        cartas.sort(
-            Comparator
-                .comparing(Carta::getPalo)
-                .thenComparingInt(Carta::getValor)
-        );
+        Collections.sort(cartas, (a, b) -> {
+            if (a.getPalo() != b.getPalo()) {
+                return a.getPalo().ordinal() - b.getPalo().ordinal();
+            }
+            return a.getValor() - b.getValor();
+        });
     }
 
-    // Acceso circular opcional
-    public Carta getCarta(int indice) {
-        if (cartas.isEmpty()) {
-            return null;
-        }
-        int idx = indice % cartas.size();
-        if (idx < 0) {
-            idx += cartas.size();
-        }
-        return cartas.get(idx);
+    // ========== NECESARIO PARA XML ==========
+    public List<Carta> copiarCartas() {
+        return new ArrayList<>(cartas);
     }
 
-    public Carta removerCarta(int indice) {
-        if (indice < 0 || indice >= cartas.size()) {
-            return null;
-        }
-        return cartas.remove(indice);
+    public void cargarCartas(List<Carta> nuevas) {
+        cartas.clear();
+        cartas.addAll(nuevas);
     }
 }
+

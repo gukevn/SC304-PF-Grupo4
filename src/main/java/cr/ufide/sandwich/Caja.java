@@ -1,46 +1,39 @@
 package cr.ufide.sandwich;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Caja {
-    private final LinkedList<Carta> cartas = new LinkedList<>();
 
-    public void agregarCarta(Carta carta) {
-        if (carta != null) {
-            cartas.addLast(carta);
-        }
+    private final List<Carta> cartas = new ArrayList<>();
+
+    public void agregarCarta(Carta c) {
+        cartas.add(c);
     }
 
-    public Carta removerPrimera() {
-        return cartas.isEmpty() ? null : cartas.removeFirst();
-    }
-
-    public Carta removerUltima() {
-        return cartas.isEmpty() ? null : cartas.removeLast();
-    }
-
-    public Carta verPrimera() {
-        return cartas.peekFirst();
-    }
-
-    public Carta verUltima() {
-        return cartas.peekLast();
+    public void vaciar() {
+        cartas.clear();
     }
 
     public List<Carta> getCartas() {
-        return new LinkedList<>(cartas);
+        return cartas;
     }
 
     public int size() {
         return cartas.size();
     }
 
-    public boolean estaVacia() {
+    public boolean isEmpty() {
         return cartas.isEmpty();
     }
 
-    public void vaciar() {
+    // ========== Necesario para XML ==========
+    public List<Carta> copiarCartas() {
+        return new ArrayList<>(cartas);
+    }
+
+    public void cargarCartas(List<Carta> nuevas) {
         cartas.clear();
+        cartas.addAll(nuevas);
     }
 }

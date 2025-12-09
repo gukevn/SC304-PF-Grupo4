@@ -7,37 +7,33 @@ public class Pozo {
 
     private final List<Carta> cartas = new ArrayList<>();
 
-    public void agregarCarta(Carta carta) {
-        if (carta != null) {
-            cartas.add(carta);
-        }
+    public void agregarCarta(Carta c) {
+        cartas.add(c);
     }
 
-    // si quieres sacar del frente tipo cola
-    public Carta removerCarta() {
-        if (cartas.isEmpty()) {
-            return null;
-        }
-        return cartas.remove(0);
-    }
-
-    public Carta verFrente() {
-        if (cartas.isEmpty()) {
-            return null;
-        }
-        return cartas.get(0);
-    }
-
-    // aquí está la diferencia clave
     public List<Carta> getCartas() {
-        return cartas;   // ya no es copia
+        return cartas;
+    }
+
+    public boolean isEmpty() {
+        return cartas.isEmpty();
     }
 
     public int size() {
         return cartas.size();
     }
 
-    public boolean isEmpty() {
-        return cartas.isEmpty();
+    public void vaciar() {
+        cartas.clear();
+    }
+
+    // ========== NECESARIO PARA XML ==========
+    public List<Carta> copiarCartas() {
+        return new ArrayList<>(cartas);
+    }
+
+    public void cargarCartas(List<Carta> nuevas) {
+        cartas.clear();
+        cartas.addAll(nuevas);
     }
 }
